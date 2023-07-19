@@ -1,0 +1,4 @@
+﻿  源.c
+C:\比特\gitee\bit-learning-process\holiday1.1\源.c(80,9): warning C4101: “a”: 未引用的局部变量
+C:\比特\gitee\bit-learning-process\holiday1.1\源.c(80,12): warning C4101: “b”: 未引用的局部变量
+  holiday1.1.vcxproj -> C:\比特\gitee\bit-learning-process\holiday1.1\Debug\holiday1.1.exe
