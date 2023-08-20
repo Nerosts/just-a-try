@@ -1,95 +1,156 @@
-﻿#define _CRT_SECURE_NO_WARNINGS 1
+#define _CRT_SECURE_NO_WARNINGS 1
 #include<stdio.h>
-//验证尼科彻斯定理，即：任何一个整数m的立方都可以写成m个连续奇数之和。
-//例如：
-//1 ^ 3 = 1
-//2 ^ 3 = 3 + 5
-//3 ^ 3 = 7 + 9 + 11
-//4 ^ 3 = 13 + 15 + 17 + 19
-//输入一个正整数m（m≤100），将m的立方写成m个连续奇数之和的形式输出。
-//数据范围：1≤�≤01≤m≤100
-//int main() {
-//    int m;
-//    scanf("%d", &m);
-//    int a = pow(m, 3);
-//    int a1 = (int)a / m - (m - 1);
-//    printf("%d", a1);
-//    for (int i = 1; i < m; i++)
-//    {
-//        printf("+%d", a1 + 2 * i);
-//    }
-//    return 0;
-//}
+#include<string.h>
+#include<math.h>
+//дһ��������ӡarr��������ݣ���ʹ�������±꣬ʹ��ָ�롣
+//
+//arr��һ������һά����
+void print(int arr[],int le)
+{
+	
+	
+}
 
-//等差数列 2，5，8，11，14。。。。
-//（从 2 开始的 3 为公差的等差数列）
-//输出求等差数列前n项和
 //
-//
-//数据范围：
-//1
-//≤
-//�
-//≤
-//1000
-//
-//1≤n≤1000
-//int main() {
-//    int n;
-//    scanf("%d", &n);
-//    int Sn = 2 * n + n * (n - 1) * 3 / 2;
-//    printf("%d", Sn);
-//    return 0;
-//}
-//首先输入要输入的整数个数n，然后输入n个整数。输出为n个整数中负数的个数，和所有正整数的平均值，结果保留一位小数。
-//0即不是正整数，也不是负数，不计入计算。如果没有正数，则平均值为0
 //int main()
 //{
-//    int n, count = 0, count1 = 0;
-//    float avg, sum = 0;
-//    scanf("%d", &n);
-//    int* buf = (int*)malloc(n * sizeof(int));
+//	int arr[] = { 1,2,3,4,5,6 };
+//	int* a = arr;
+//	for (int i = 0; i <sizeof(arr)/sizeof(arr[1]); i++)
+//	{
+//		printf("%d ", *(a + i));
+//	}
+//	return 0;
+//}
+
+//дһ����������������һ���ַ���������
+//int main() {
+//	char arr[10000];
+//	scanf("%s", arr);
+//	return 0;
+//}
+//int main() {
+//    char in[10000];
+//    gets(in);
+//    char* a = in;
+//    for (int i = strlen(in) - 1; i >= 0; i--) {
+//        printf("%c", *(a + i));
+//    }
+//}
 //
-//    for (int i = 0; i < n; i++) {
-//        scanf("%d ", &buf[i]);
+//int main()
+//{
+//	int k = 0;
+//
+//	for (int i = 1; i <= 6; i++)
+//	{
+//		//��ӡ�ո�
+//		for (int j = 1; j <= 6 - i; j++)
+//		{
+//			printf(" ");
+//		}
+//		for (int j = 1; j <= 2 * i - 1; j++)
+//		{
+//			printf("*");
+//		}
+//		printf("\n");
+//	}
+//	for (int i = 5; i >= 1; i--)
+//	{
+//		for (int j = 1; j <= 6 - i; j++)
+//		{
+//			printf(" ");
+//		}
+//		for (int k = 1; k <= 2 * i - 1; k++)
+//		{
+//			printf("*");
+//		}
+//		printf("\n");
+//		
+//	}return 0;
+//}
+//int isArmstrongNumber(int num) {
+//    int originalNum = num;
+//    int sum = 0;
+//    int numDigits = 0;
+//
+//    while (num) {
+//        num /= 10;
+//        numDigits++;
 //    }
 //
-//    for (int i = 0; i < n; i++) {
-//        if (buf[i] < 0) {
-//            count++;
-//        }
-//        else if (buf[i] > 0) {
-//            sum += buf[i];
-//            count1++;
-//        }
+//    num = originalNum;
+//
+//    while (num) {
+//        sum += pow(num % 10, numDigits);
+//        num /= 10;
 //    }
-//    if (count1 == 0)
-//    {
-//        printf("%d %.1f", count, sum);
+//
+//    if (sum == originalNum) {
+//        return 1; 
 //    }
 //    else {
-//        avg = sum / count1;
-//        printf("%d %.1f", count, avg);
+//        return 0;
 //    }
-//    return 0;
+//}
 //
-///*有*/一个长度
-//为 n 的非降序数组，比如[1, 2, 3, 4, 5]，将它进行旋转，即把一个数组最开始的若干个元素搬到数组的
-//末尾，变成一个旋转数组，比如变成了[3, 4, 5, 1, 2]，或者[4, 5, 1, 2, 3]这样的。请问，给定这样一个旋
-//转数组，求数组中的最小值
-int minNumberInRotateArray(int* arr, int arrSize)
+//int main() {
+//    for (int i=  0; i <= 100000; i++) {
+//        if (isArmstrongNumber(i)) {
+//            printf("%d\n", i);
+//        }
+//    }
+//
+//    return 0;
+//}
+//int sum(int a)
+//{
+//	if (a <= 9)
+//	{
+//		return a;
+//	}
+//	else
+//	{
+//		return a + sum(a / 10);
+//	}
+//}
+//
+//int main()
+//{
+//	int a = 22222;
+//	printf("%d", sum(a));
+//	return 0;
+//}
+//����ˮ��1ƿ��ˮ1Ԫ��2����ƿ���Ի�һƿ��ˮ����20Ԫ�����Ժȶ�����ˮ�����ʵ�֣���
+
+//{
+//	int sum = 0;
+//	if (a >= 2)
+//	{
+//		sum += a;
+//		return sum + calculate(a / 2);
+//	}
+//	else
+//	{
+//		return 1;
+//	}
+//}
+//
+//int main()
+//{
+//	int kole = 20;
+//	
+//	printf("%d", calculate(kole));
+//	return 0;
+//}
+int main()
 {
-    int left = 0;
-    int right = arrSize - 1;
-    while (left < right)
+    int i = 0;
+    int arr[] = { 1,2,3,4,5,6,7,8,9,10 };
+    for (i = 0; i <= 12; i++)
     {
-        int mid = (left + right) / 2;
-        if (arr[mid] < arr[right])
-            right = mid;
-        else if (arr[mid] > arr[right])
-            left = mid + 1;
-        else
-            right -= 1;
+        arr[i] = 0;
+        printf("hello bit\n");
     }
-    return arr[left];
+    return 0;
 }
