@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS 1
+#define _CRT_SECURE_NO_WARNINGS 1
 解题思路： 此题一般常用的方法有两种，三指针翻转法和头插法
 1. 三指针翻转法
 记录连续的三个节点，原地修改节点指向
