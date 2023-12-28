@@ -1,59 +1,59 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include"Stack.h"
 
-void SInit(ST* pst)
+void STInit(ST* ps)
 {
-	pst->a = NULL;
-	pst->capacity = 0;
-	pst->top = -1;
+	assert(ps);
+	ps->a = NULL;
+	ps->top = -1;
+	ps->capacity = 0;
 }
 
-void SDestroy(ST* pst)
+void STDestroy(ST* ps)
 {
-	assert(pst);
-	free(pst->a);
-	pst->a = NULL;
+	free(ps->a);
+	ps->a = NULL;
+	ps->top = -1;
+	ps->capacity = 0;
 }
 
-void check(ST* pst)
+void STPush(ST* ps, STDataType x)
 {
-	if (pst->capacity == pst->top+1)
+	assert(ps);
+	if (ps->capacity == ps->top + 1)//判断有没有满
 	{
-		pst->capacity = pst->capacity == 0 ? 4 : 2 * pst->capacity;
-		pst->a = realloc(pst->a, sizeof(ST) * pst->capacity);
+		int newCapacity = ps->capacity == 0 ? 4 : 2 * ps->capacity;
+		STDataType* new = (STDataType*)realloc(ps->a, sizeof(ST) * newCapacity);
+		assert(new);
+		ps->a = new;
+		ps->capacity = newCapacity;
 	}
+	ps->top++;
+	ps->a[ps->top] = x;
 }
 
-void SPush(ST* pst, int x)
+void STPop(ST* ps)
 {
-	assert(pst);
-	check(pst);
-	pst->top++;
-	(pst->a)[pst->top] = x;
+	assert(ps);
+	assert(ps->top >= 0);//确保不为空
+	ps->top--;
 }
 
-void SPop(ST* pst)
+STDataType STTop(ST* ps)
 {
-	assert(pst);
-	assert(pst->top > 0);
-	pst->top--;
+	assert(ps);
+	assert(ps->top >= 0);
+	return ps->a[ps->top];
 }
 
-STDataType STop(ST* pst)
+bool STEmpty(ST* ps)
 {
-	assert(pst);
-	assert(pst->top >=0);
-	return (pst->a)[pst->top];
+	assert(ps);
+	return ps->top == -1;
 }
 
-bool SEmpty(ST* pst)
+int STSize(ST* ps)
 {
-	assert(pst);
-	return pst->top == 0;
-}
-
-int SSize(ST* pst)
-{
-	assert(pst);
-	return pst->top + 1;
+	assert(ps);
+	return ps->top + 1;
 }

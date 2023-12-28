@@ -9,18 +9,18 @@ typedef int STDataType;
 typedef struct Stack
 {
 	int* a;
-	int top;
+	int top;		// 标识栈顶位置的
 	int capacity;
 }ST;
 
-void SInit(ST* pst);
-void SDestroy(ST* pst);
+void STInit(ST* ps);//初始化
+void STDestroy(ST* ps);//销毁
 
-void SPush(ST* pst, int x);
-void SPop(ST* pst);
+void STPush(ST* ps, STDataType x);// 栈顶插入
+void STPop(ST* ps);// 栈顶删除
 
-STDataType STop(ST* pst);
-bool SEmpty(ST* pst);
-int SSize(ST* pst);
+STDataType STTop(ST* ps);//返回栈顶元素
 
+bool STEmpty(ST* ps);//判断栈是否为空
 
+int STSize(ST* ps);//栈中元素数量
