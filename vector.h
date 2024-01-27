@@ -1,28 +1,42 @@
 #pragma once
-//在 C++ 中，typedef 定义的类型别名在整个类的作用域内都是可见的
-//包括 public 和 private 部分。因此，即使在 public 部分定义了类型别名
-//也可以在 private 部分中使用这些类型别名。
-
-
+#include<assert.h>
 namespace MyVector
 {
-	template<class T>
+	template <class T>
 	class vector
 	{
 	public:
 		typedef T* iterator;
-		typedef const T* const_iterator;
+		typedef const T* const_iterator;//先定义好迭代器
+		iterator begin()
+		{
+			return _start;
+		}
+		iterator end()
+		{
+			return _finish;
+		}
+
+		const_iterator begin()const
+		{
+			return _start;
+		}
+		const_iterator end()const
+		{
+			return _finish;
+		}
 
 		vector()
 			:_start(nullptr)
-			,_finish(nullptr)
-			,_endOfStorage(nullptr)
+			, _finish(nullptr)
+			, _endOfStorage(nullptr)//直接使用初始化列表
 		{}
 
-		vector(size_t n, const T& val = T())
+		vector(size_t n, const T& val= T())
 		{
 			resize(n, val);
 		}
+
 		vector(int n, const T& val = T())//适用于  vector<int> v(5,1)
 		{
 			resize(n, val);
@@ -38,26 +52,10 @@ namespace MyVector
 			}
 		}
 
-		//vector(const vector& v)
-		//{
-		//	T* tmp = new T[v.capacity()];
-		//	if (v)
-		//	{
-		//		memccpy(tmp, v._start, sizeof(T) * (v._endOfStorage - v._start));
-		//		_start = tmp;
-		//		_finish = _start + (v._finish - v._start);
-		//		_endOfStorage = _start + (v._endOfStorage - v._start);
-		//	}
-		//	else
-		//	{
-		//		_start = _finish = _endOfStorage = nullptr;
-		//	}
-		//}
-
 		vector(const vector<T>& v)
 			:_start(nullptr)
 			,_finish(nullptr)
-			,_endOfStorage(nullptr)
+			,_endOfStorage(nullptr)//先利用初始化列表进行初始化
 		{
 			reserve(v.capacity());
 			for (const auto& e : v)
@@ -81,108 +79,16 @@ namespace MyVector
 
 		~vector()
 		{
-			if (_start)
-			{
-				delete[] _start;
-				_start = _finish = _endOfStorage = nullptr;
-			}
-			//是空没必要动
+			delete[] _start;
+			_start = _finish = _endOfStorage = nullptr;
 		}
 
-		iterator begin()
-		{
-			return _start;
-		}
-
-		iterator end()
-		{
-			return _finish;
-		}
-
-		const_iterator begin()const
-		{
-			return _start;
-		}
-
-		const_iterator end()const
-		{
-			return _finish;
-		}
-
-		//void resize(size_t n,T& x=T())
-		//{
-		//	assert(n > 0);
-
-		//	if (n > capacity())
-		//	{
-		//		reserve(n);
-		//		for (size_t i = size(); i <= n; i++)
-		//		{
-		//			push_back(x);
-		//		}
-		//	}
-		//	if (n > size())
-		//	{
-		//		for (size_t i = size(); i <= n; i++)
-		//		{
-		//			push_back(x);
-		//		}
-		//	}
-		//	if (n < size())
-		//	{
-		//		for (size_t i = size(); i >= n; i--)
-		//		{
-		//			pop_back();
-		//		}
-		//	}
-		//}
-
-		void resize(size_t n,const T& x = T())
-		{
-			assert(n > 0);
-
-			if (n > size())
-			{
-				reserve(n);
-				while (_finish < _start + n)
-				{
-					*_finish = x;
-					_finish++;
-				}
-			}
-			if (n < size())
-			{
-				_finish = _start + n;
-			}
-		}
-
-		void reserve(size_t n)//扩容
-		{
-			if (n > capacity())
-			{
-				size_t old = size();//存一下，后面会改
-				T* tmp = new T[n];
-				if (_start != nullptr)
-				{
-					//memcpy(tmp, _start, sizeof(T) * old);
-					for (int i = 0; i < old; i++)
-					{
-						tmp[i] = _start[i];//是T的=（对象对象对象）
-					}
-					delete[] _start;
-				}
-
-				_start = tmp;
-				_finish = _start + old;
-				_endOfStorage = _start + n;
-			}
-		}
 
 		void push_back(const T& x)
 		{
 			if (_finish == _endOfStorage)
 			{
-				size_t newcapacity = capacity() == 0 ? 4 : 2 * (capacity());
+				int newcapacity = capacity() == 0 ? 2 : 2 * capacity();
 				reserve(newcapacity);
 			}
 			*_finish = x;
@@ -192,53 +98,38 @@ namespace MyVector
 		void pop_back()
 		{
 			assert(size() > 0);
-			_finish--;
+			--_finish;
 		}
 
-		iterator insert(iterator pos, const T& x)//pos之前插入
+		iterator insert(iterator pos, const T& x)//在pos前插入
 		{
 			assert(pos < _finish&& pos >= _start);
 
 			if (_finish == _endOfStorage)
 			{
 				size_t site = pos - _start;
-				size_t newcapacity = capacity() == 0 ? 4 : 2 * (capacity());
+				int newcapacity = capacity() == 0 ? 2 : 2 * (capacity());
 				reserve(newcapacity);
-				pos = _start + site;
+
+				pos = _start + site;//pos到新空间的位置上
 			}
-			
-			//memmove(pos + 1, pos, sizeof(T) * (_finish - pos));浅拷贝
-			iterator end = _finish;
-			while (end > pos)
+			iterator end = _finish - 1;
+			while (end >= pos)//开始整体向后退
 			{
-				*end = *(end - 1);
+				*(end + 1) = *end;
 				end--;
 			}
 			*pos = x;
-
 			++_finish;
+
 			return pos;
 		}
 
-		//void erase(iterator pos)
-		//{
-		//	//memmove(pos , pos+1, sizeof(T) * (_finish - pos));
-		//	assert(pos < _finish&& pos >= _start);
-
-		//	iterator start = pos + 1;
-		//	while (start < _finish)
-		//	{
-		//		*(start - 1) = *start;
-		//		start++;
-		//	}
-		//	_finish--;
-		//}
-
-		iterator erase(iterator pos)
+		iterator erase(iterator pos)//删pos处
 		{
-			//memmove(pos , pos+1, sizeof(T) * (_finish - pos));
 			assert(pos < _finish&& pos >= _start);
-
+			assert(size() > 0);
+			//开始向前移动
 			iterator start = pos + 1;
 			while (start < _finish)
 			{
@@ -246,17 +137,45 @@ namespace MyVector
 				start++;
 			}
 			_finish--;
-			return pos;
+			return pos;//返回删除的位置
 		}
 
-		size_t size()const
+		void reserve(size_t n)
 		{
-			return _finish - _start;
+			if (n > capacity())
+			{
+				int old_size = size();//保存一下长度，方便后续给_finish移到新的位置
+				T* tmp = new T[n];
+				if (_start != nullptr)//vector里存东西了
+				{
+					for (size_t i = 0; i < size(); ++i)
+					{
+						tmp[i] = _start[i];//_start本质是指针
+					}
+				}
+				delete[] _start;
+				_start = tmp;
+
+				_finish = _start + old_size;
+				_endOfStorage = _start + n;
+			}
 		}
 
-		size_t capacity()const
+		void resize(size_t n, const T& x = T())
 		{
-			return _endOfStorage - _start;
+			if (n > size())
+			{
+				reserve(n);//<capacity 的话，也没有进行处理
+				while (_finish != _start + n)
+				{
+					*_finish = x;
+					++_finish; 
+				}
+			}
+			else
+			{
+				_finish = _start + n;//小于长度时，直接移动finish
+			}
 		}
 
 		T& operator[](size_t i)
@@ -266,11 +185,22 @@ namespace MyVector
 			return _start[i];
 		}
 
-		const T& operator[](size_t i)const
+
+		const T& operator[](size_t i) const
 		{
 			assert(i < size());
 
 			return _start[i];
+		}
+
+		size_t size()
+		{
+			return _finish - _start;
+		}
+
+		size_t capacity()
+		{
+			return _endOfStorage - _start;
 		}
 
 	private:
@@ -282,24 +212,25 @@ namespace MyVector
 	void test1()
 	{
 		vector<int> v;
-		v.push_back(1);
-		v.push_back(2);
-		v.push_back(3);
-		v.push_back(3);
-		v.push_back(3);
-
-		vector<int>::iterator it = v.begin();
-		while (it != v.end())
+		for (auto e : v)
 		{
-			cout << *it << " ";
-			it++;
+			cout << e << " ";
 		}
 		cout << endl;
 
-		for (int i = 0; i < v.size(); i++)
+		v.resize(10);
+		for (auto e : v)
 		{
-			cout << v[i] << " ";
+			cout << e << " ";
 		}
+		cout << endl;
+
+		v.resize(5);
+		for (auto e : v)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
 	}
 
 	void test2()
@@ -307,15 +238,33 @@ namespace MyVector
 		vector<int> v;
 		v.push_back(1);
 		v.push_back(2);
-		v.push_back(3);
-		v.push_back(3);
-		v.push_back(3);
-
-		vector<int> v2 = v;
-		for (auto e : v2)
+		v.push_back(3);//尾插3个
+		for (auto e : v)
 		{
 			cout << e << " ";
 		}
+		cout << endl;
+
+		v.pop_back();//尾删一个
+		for (auto e : v)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+
+		v.insert(v.begin(), 0);//头插一个0
+		for (auto e : v)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+
+		v.erase(v.begin());//头删
+		for (auto e : v)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
 	}
 
 	void test3()
@@ -324,22 +273,27 @@ namespace MyVector
 		v.push_back(1);
 		v.push_back(2);
 		v.push_back(3);
-		v.push_back(3);
-		v.push_back(3);
-
+		v.push_back(4);
+		v.push_back(5);
+		v.push_back(6);
 		for (auto e : v)
 		{
 			cout << e << " ";
 		}
 		cout << endl;
-		v.resize(10);
-		for (auto e : v)
+		//删除偶数
+		vector<int>::iterator it = v.begin();
+		while (it != v.end())
 		{
-			cout << e << " ";
+			if (*it % 2 == 0)
+			{
+				it=v.erase(it);//这里不能只是v.erase(it); 删除后
+			}
+			else
+			{
+				it++;
+			}
 		}
-		cout << endl;
-		v.erase(v.begin());
-
 		for (auto e : v)
 		{
 			cout << e << " ";
