@@ -1,53 +1,111 @@
 #define _CRT_SECURE_NO_WARNINGS 1
-SELECT* FROM homework.student;
+
+#include<iostream>
+#include<vector>
+using namespace std;
+
+#include<iostream>
+using namespace std;
 
 
-ALTER TABLE student
-DROP COLUMN address;
-select* from student;
+//int& aaa(vector<int>& a,int& x)
+//{
+//    if(x==a.size())
+//    {
+//        return a[a.size()-1];
+//    }
+//    cin>>a[x++]>>aaa(a,x);
+//    
+//}
+//
+//int main()
+//{
+//    ios::sync_with_stdio(0);
+//    cin.tie(0);
+//    int N=0;
+//    cin>>N;
+//    vector<int> jewl(N);
+//    for(int i=0;i<N;i++)
+//    {
+//        cin>>jewl[i];
+//    }
+//    int a=0;
+//    aaa(jewl,a);
+//    for(int i=0;i<N;i++)
+//    {
+//        cout<<jewl[i];
+//    }
+//    return 0;
+//}
 
-insert into STUDENT(Sno, Sname, Ssex, Sage, Sdept) values('201215121', '李勇', '男', 20, 'CS');
-insert into STUDENT(Sno, Sname, Ssex, Sage, Sdept) values('201215122', '刘晨', '女', 19, 'CS');
-insert into STUDENT(Sno, Sname, Ssex, Sage, Sdept) values('201215123', '王敏', '女', 19, 'MA');
-insert into STUDENT(Sno, Sname, Ssex, Sage, Sdept) values('201215125', '张立', '男', 19, 'IS');
-WHERE Sno in
-(SELECT Sno
-	FROM sc
-	WHERE Cno = '3'
-)
-ORDER BY Sno DESC;
+double LCM3(int n1, int n2, int n3)
+{
+    int m = max(max(n1, n2), n3);
+    for (int i = m; ; m++)
+    {
+        if (i % n1 == 0 && i % n2 == 0 && i % n3 == 0)
+        {
+            return i;
+        }
+    }
+}
 
-SELECT COUNT(*)
-FROM student
-where Ssex = '男'
-group by Sdept;
+double LCM2(int n1, int n2)
+{
+    int m = max(n1, n2);
+    for (int i = m; ; m++)
+    {
+        if (i % n1 == 0 && i % n2 == 0)
+        {
+            return i;
+        }
+    }
+}
 
-SELECT Sdept 系,
-sum(case when Ssex = '男' then 1 else 0 end) 男生人数,
-sum(case when Ssex = '女' then 1 else 0 end) 女生人数,
-MAX(CASE WHEN Ssex = '男' THEN Sage END) 男生最大年龄,
-MAX(CASE WHEN Ssex = '女' THEN Sage END) 女生最大年龄
-FROM student
-GROUP BY Sdept
-ORDER BY Sdept;
-SELECT* FROM homework.course;
-insert into course(Cno, Cname)values('1', 'DB_design');
-insert into course(Cno, Cname)values('2', '数学');
-insert into course(Cno, Cname)values('3', '信息系统');
-insert into course(Cno, Cname)values('4', '操作系统');
-insert into course(Cno, Cname)values('5', '数据结构');
-insert into course(Cno, Cname)values('6', '数据处理');
-insert into course(Cno, Cname)values('7', 'PASCAL语言');
-update COURSE set Cpno = '5', Ccredit = 4 where Cno = '1';
-update COURSE set Cpno = NULL, Ccredit = 2 where Cno = '2';
-update COURSE set Cpno = '1', Ccredit = 4 where Cno = '3';
-update COURSE set Cpno = '6', Ccredit = 3 where Cno = '4';
-update COURSE set Cpno = '7', Ccredit = 4 where Cno = '5';
-update COURSE set Cpno = NULL, Ccredit = 2 where Cno = '6';
-update COURSE set Cpno = '6', Ccredit = 4 where Cno = '7';
-SELECT* FROM homework.sc;
-insert into SC(Sno, Cno, Grade) values('201215121', '1', 92);
-insert into SC(Sno, Cno, Grade) values('201215121', '2', 85);
-insert into SC(Sno, Cno, Grade) values('201215121', '3', 88);
-insert into SC(Sno, Cno, Grade) values('201215122', '2', 59);
-insert into SC(Sno, Cno, Grade) values('201215122', '3', 80);
+double fun(vector<int>& jewl, int i, int j, int k)
+{
+    double s = 0;
+    double left = jewl[i] * jewl[j] * jewl[k];
+    double up = LCM3(jewl[i], jewl[j], jewl[k]);
+    double down = LCM2(jewl[i], jewl[j]) * LCM2(jewl[i], jewl[k]) * LCM2(jewl[j], jewl[k]);
+    s = left * (up / down);
+    return s;
+}
+
+int main()
+{
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int N = 0;
+    cin >> N;
+    vector<int> jewl(N);
+    for (int i = 0; i < jewl.size(); i++)
+    {
+        cin >> jewl[i];
+    }
+    vector<int> ret(3);
+    double s = 0;
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = i + 1; j < N; j++)
+        {
+            for (int k = j + 1; k < N; k++)
+            {
+                double news = fun(jewl, i, j, k);
+                if (news > s)
+                {
+                    s = news;
+                    ret[0] = i;
+                    ret[1] = j;
+                    ret[2] = k;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        cout << ret[i] << " ";
+    }
+    return 0;
+}
+
